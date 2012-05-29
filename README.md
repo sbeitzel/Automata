@@ -39,10 +39,12 @@ Automata requires the Java Runtime version 1.3 or later.
 To run by hand from the command line, just type
 
 UNIX or OS X:
-   % java -jar bin/automata.jar
+
+    % java -jar bin/automata.jar
 
 WINDOWS
-   > java -jar BIN\automata.jar
+
+    > java -jar BIN\automata.jar
 
 
 Mac OS X releases will produce a double-clickable bundle, as well.
