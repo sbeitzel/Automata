@@ -25,13 +25,15 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
+import javafx.scene.shape.Rectangle;
+
 /**
  * The main Cellular Automata application window.
  *
  * @author Seth Morabito
  * @version  $Id: AutomataFrame.java,v 1.14 2003/10/13 04:00:23 sethm Exp $
  */
-public class AutomataFrame extends JFrame implements Observer {
+public class AutomataFrame extends Rectangle implements Observer {
 
     // Constants
     private static final String FRAME_TITLE = "Automata";
@@ -106,15 +108,13 @@ public class AutomataFrame extends JFrame implements Observer {
      * Add a new cell panel to the main app window.
      */
     public void addCells(int cols, int rows, int cellSize) {
+        // remove any existing model
+        removeCells();
+
         mCellSize = cellSize;
 
         mCellModel = new CellModel(cols, rows);
         mCellModel.addObserver(this);
-
-        // Remove any existing cell panel
-        if (mCellPanel != null) {
-            mCellPanelContainer.remove(mCellPanel);
-        }
 
         mCellPanel = new CellPanel(mCellModel, cellSize);
 
@@ -524,8 +524,8 @@ public class AutomataFrame extends JFrame implements Observer {
      */
     private TreeMap setupRuleSets() {
 
-        LinkedList rules = new LinkedList();
-        TreeMap rulesMap = new TreeMap();
+        LinkedList<RuleSet> rules = new LinkedList<>();
+        TreeMap<String, RuleSet> rulesMap = new TreeMap<>();
 
         // Start with the classic.
         rules.add(new RuleSet("Life", new int[]{3}, new int[]{2,3}));
@@ -583,8 +583,7 @@ public class AutomataFrame extends JFrame implements Observer {
                                     new int[]{2,3},
                                     99.0, 99.0));
 
-        for (Iterator i = rules.iterator(); i.hasNext(); ) {
-            RuleSet r = (RuleSet) i.next();
+        for (RuleSet r : rules) {
             rulesMap.put(r.getName(), r);
         }
 
