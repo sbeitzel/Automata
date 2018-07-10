@@ -1,7 +1,7 @@
 Automata Explorer
 =================
 
-Autaomata Explorer was a weekend project of mine after a brief but
+Automata Explorer was a weekend project of mine after a brief but
 passionate interest in cellular automata back in 2003. This project
 should therefore _not_ be looked at as an example of my most recent
 (or best) work.  Nevertheless, I am preserving it here on Github for
