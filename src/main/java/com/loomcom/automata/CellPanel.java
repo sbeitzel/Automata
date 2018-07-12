@@ -20,10 +20,13 @@
 
 package com.loomcom.automata;
 
-import java.awt.*;
-import java.awt.geom.*;
-import java.util.*;
-import javax.swing.*;
+import java.util.Observable;
+import java.util.Observer;
+
+import javafx.application.Platform;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 /**
  * The visual representation of a two dimensional field of cells.  Cells which
@@ -32,26 +35,35 @@ import javax.swing.*;
  * @author Seth Morabito
  * @version $Id: CellPanel.java,v 1.10 2003/10/03 23:41:03 sethm Exp $
  */
-public class CellPanel extends JComponent implements Observer {
+public class CellPanel extends Canvas implements Observer {
     private int mCols;
     private int mRows;
     private int mCellSize;
 
     private Color mOutlineColor; // Outline color
+    private Color mBackground;
+    private Color mForeground;
 
     private CellModel mCellModel;
 
     private boolean mShowCellOutlines = true; // Show outlines by default
-    private boolean mShowAging;
+    private boolean mShowAging = false;
+
+    public CellPanel() {
+        super();
+    }
 
     /**
-     * Construct a new CellPanel.
+     * Initialize the cell field with a model. This method will cause the CellPanel
+     * to resize itself.
      *
-     * @param model     The cell model for this panel.
-     * @param cellSize  The size of the cells, in pixels.
+     * @param model the model to use
+     * @param cellSize the size of a single cell
      */
-    public CellPanel(CellModel model, int cellSize) {
-        setDoubleBuffered(true);
+    public void setModel(CellModel model, int cellSize) {
+        if (mCellModel != null) {
+            mCellModel.deleteObserver(this);
+        }
         mCellModel = model;
         model.addObserver(this);
         mCols = model.getCols();
@@ -59,12 +71,38 @@ public class CellPanel extends JComponent implements Observer {
         mCellSize = cellSize;
 
         // Default colors
-        setForeground(Color.black);
-        setBackground(Color.white);
-        setOutline(Color.lightGray);
+        mBackground = Color.WHITE;
+        mForeground = Color.BLACK;
+        setOutline(Color.LIGHTGRAY);
 
-        setSize(mCellSize * mCols, mCellSize * mRows);
-        setPreferredSize(new Dimension(mCellSize * mCols, mCellSize * mRows));
+        setWidth(mCellSize * mCols);
+        setHeight(mCellSize * mRows);
+    }
+
+    public CellModel getModel() {
+        return mCellModel;
+    }
+
+    public int getCellSize() {
+        return mCellSize;
+    }
+
+    public Color getBackground() {
+        return mBackground;
+    }
+
+    public void setBackground(Color c) {
+        mBackground = c;
+        schedulePaint();
+    }
+
+    public Color getForeground() {
+        return mForeground;
+    }
+
+    public void setForeground(Color c) {
+        mForeground = c;
+        schedulePaint();
     }
 
     /**
@@ -74,6 +112,7 @@ public class CellPanel extends JComponent implements Observer {
      */
     public void setOutline(Color c) {
         mOutlineColor = c;
+        schedulePaint();
     }
 
     /**
@@ -86,18 +125,20 @@ public class CellPanel extends JComponent implements Observer {
     }
 
     /**
-     * Overridden to remove the default update() behavior,
-     * which clears the component on each paint call.
-     */
-    public void update(Graphics g) {
-        return; // do nothing
-    }
-
-    /**
      * Implementation of the Observer interface.
      */
+    @Override
     public void update(Observable t, Object o) {
-        repaint();
+        schedulePaint();
+    }
+
+    public void schedulePaint() {
+        // cause the cell field to be redrawn.
+        if (Platform.isFxApplicationThread()) {
+            paint();
+        } else {
+            Platform.runLater(this::paint);
+        }
     }
 
     /**
@@ -106,59 +147,61 @@ public class CellPanel extends JComponent implements Observer {
      * color with a higher alpha value based on the percent parameter.
      */
     private Color lightenColor(Color c, int age) {
-        int red = c.getRed();
-        int green = c.getGreen();
-        int blue = c.getBlue();
-        int alpha = c.getAlpha();
+        double red = c.getRed();
+        double green = c.getGreen();
+        double blue = c.getBlue();
+        double alpha = c.getOpacity();
 
         double p = 1.0 - (0.05 * age);
 
         if (p > 0.20) {
-            alpha = (int)(p * alpha);
+            alpha = (p * alpha);
         } else {
-            alpha = (int)(0.20 * alpha);
+            alpha = (0.20 * alpha);
         }
 
         return new Color(red, green, blue, alpha);
     }
 
     /**
-     * Draw the cell field.
+     * Draw the cell field. This should only be called on the FX thread
      */
-    public void paint(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
+    private void paint() {
+        if (Platform.isFxApplicationThread()) {
+            GraphicsContext g2d = getGraphicsContext2D();
 
-        int width = getSize().width;
-        int height = getSize().height;
+            double width = getWidth();
+            double height = getHeight();
 
-        // Clear the panel.
-        g2d.setPaint(getBackground());
-        g2d.fill(new Rectangle(0, 0, width, height));
+            // Clear the panel.
+            g2d.setFill(getBackground());
+            g2d.fillRect(0, 0, width, height);
 
-        g2d.setPaint(getForeground());
-        for (int i = 0; i < mCols; i++) {
-            for (int j = 0; j < mRows; j++) {
-                if (mCellModel.getCell(i, j)) {
-                    // If cell aging is enabled, draw aged cells
-                    int age = 0;
-                    if (mShowAging) {
-                        age = mCellModel.getCellAge(i, j);
-                        g2d.setPaint(lightenColor(getForeground(), age));
-                    }
-                    g2d.fillRect(i * mCellSize,
-                                 j * mCellSize,
-                                 mCellSize,
-                                 mCellSize);
-                    if (mShowAging) {
-                        g2d.setPaint(getForeground());
+            g2d.setFill(getForeground());
+            for (int i = 0; i < mCols; i++) {
+                for (int j = 0; j < mRows; j++) {
+                    if (mCellModel.getCell(i, j)) {
+                        // If cell aging is enabled, draw aged cells
+                        int age = 0;
+                        if (mShowAging) {
+                            age = mCellModel.getCellAge(i, j);
+                            g2d.setFill(lightenColor(getForeground(), age));
+                        }
+                        g2d.fillRect(i * mCellSize,
+                                     j * mCellSize,
+                                     mCellSize,
+                                     mCellSize);
+                        if (mShowAging) {
+                            g2d.setFill(getForeground());
+                        }
                     }
                 }
             }
-        }
 
-        // Show outlines if desired
-        if (mShowCellOutlines) {
-            drawCellOutlines(g2d);
+            // Show outlines if desired
+            if (mShowCellOutlines) {
+                drawCellOutlines(g2d);
+            }
         }
     }
 
@@ -176,29 +219,30 @@ public class CellPanel extends JComponent implements Observer {
      */
     public void setCellAging(boolean b) {
         mShowAging = b;
+        schedulePaint();
     }
 
     /**
      * Draw a grid showing the outlines of the cells.
      */
-    private void drawCellOutlines(Graphics2D g2d) {
-        g2d.setPaint(mOutlineColor);
-        g2d.setStroke(new BasicStroke(1.0f));
+    private void drawCellOutlines(GraphicsContext g2d) {
+        g2d.setStroke(mOutlineColor);
+        g2d.setLineWidth(1);
 
-        int width = getSize().width;
-        int height = getSize().height;
+        double width = getWidth();
+        double height = getHeight();
 
         // Draw rectangle outlining the entire component
-        g2d.draw(new Rectangle(0, 0, width - 1, height - 1));
+        g2d.strokeRect(0, 0, width - 1, height - 1);
 
         // Draw the vertical lines
         for (int i = 0; i < mCols; i++) {
-            g2d.drawLine(i * mCellSize, 0, i * mCellSize, height);
+            g2d.strokeLine(i * mCellSize, 0, i * mCellSize, height);
         }
 
         // Draw the horizontal lines
         for (int j = 0; j < mRows; j++) {
-            g2d.drawLine(0, j * mCellSize, width, j * mCellSize);
+            g2d.strokeLine(0, j * mCellSize, width, j * mCellSize);
         }
     }
 }

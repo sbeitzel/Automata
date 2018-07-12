@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.web.WebView?>
+
+
+<DialogPane xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.loomcom.automata.AboutDialog">
+   <content>
+       <GridPane>
+           <columnConstraints>
+               <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="650.0" />
+           </columnConstraints>
+           <rowConstraints>
+               <RowConstraints minHeight="10.0" prefHeight="400.0" vgrow="SOMETIMES" />
+           </rowConstraints>
+           <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+               <WebView prefHeight="200.0" prefWidth="200.0" fx:id="_webView"/>
+           </ScrollPane>
+       </GridPane>
+   </content>
+</DialogPane>

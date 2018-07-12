@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import com.loomcom.automata.CellPanel?>
+
+<DialogPane xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.loomcom.automata.ColorDialog">
+   <content>
+      <GridPane>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="300.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <HBox prefHeight="100.0" prefWidth="200.0">
+            <Label fx:id="_foregroundLabel" text="Foreground">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </Label>
+            <ColorPicker fx:id="_foreground" onAction="#onForeground" promptText="Foreground color">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+            </ColorPicker>
+         </HBox>
+         <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
+            <Label fx:id="_backgroundLabel" text="Background">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </Label>
+            <ColorPicker fx:id="_background" onAction="#onBackground">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+            </ColorPicker>
+         </HBox>
+         <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
+            <Label fx:id="_outlineLabel" text="Outline color">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </Label>
+            <ColorPicker fx:id="_outlinePicker" onAction="#onOutline">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+            </ColorPicker>
+         </HBox>
+         <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="3">
+            <Label fx:id="_previewLabel" text="Preview">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </Label>
+            <CellPanel fx:id="_preview" height="60.0" width="60.0">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </CellPanel>
+         </HBox>
+      </GridPane>
+   </content>
+</DialogPane>

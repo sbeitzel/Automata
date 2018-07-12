@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckMenuItem?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioMenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import com.loomcom.automata.CellPanel?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+    prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/"
+    fx:controller="com.loomcom.automata.SimWindow">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="0.0" prefHeight="30.0" vgrow="NEVER" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="NEVER" />
+    </rowConstraints>
+    <MenuBar>
+        <Menu mnemonicParsing="false" text="File">
+            <MenuItem fx:id="_newItem" mnemonicParsing="false" onAction="#onNew" text="New...">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="N" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+            <MenuItem fx:id="_quitItem" mnemonicParsing="false" onAction="#onQuit" text="Quit">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="Q" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Draw">
+            <CheckMenuItem fx:id="_showOutlinesItem" mnemonicParsing="false" selected="true" text="Show Cell Outlines" onAction="#onShowOutlines"/>
+            <CheckMenuItem fx:id="_showAgingItem" mnemonicParsing="false" selected="true" text="Show Cell Aging" onAction="#onShowAging"/>
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem fx:id="_editColorsItem" mnemonicParsing="false" onAction="#onEditColors" text="Edit Colors..." />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem fx:id="_clearDisplayItem" mnemonicParsing="false" onAction="#onClear" text="Clear Display" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <Menu fx:id="_menuGlider" mnemonicParsing="false" text="Draw Glider">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="G" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
+                </accelerator>
+                <RadioMenuItem fx:id="_noneItem" mnemonicParsing="false" selected="true" text="None" />
+            </Menu>
+        </Menu>
+        <Menu fx:id="_ruleMenu" mnemonicParsing="false" text="Rule" />
+        <Menu mnemonicParsing="false" text="Help">
+            <MenuItem fx:id="_aboutItem" mnemonicParsing="false" onAction="#onAbout" text="About" />
+        </Menu>
+    </MenuBar>
+    <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
+        <Region prefHeight="200.0" prefWidth="200.0" />
+        <VBox prefHeight="200.0" prefWidth="100.0">
+            <Label fx:id="_generationsLabel" text="Generations per second">
+                <VBox.margin>
+                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                </VBox.margin>
+            </Label>
+            <ChoiceBox maxWidth="150.0" minWidth="150.0" prefWidth="150.0" fx:id="_speedBox" onAction="#onSetSpeed">
+                <VBox.margin>
+                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                </VBox.margin>
+            </ChoiceBox>
+        </VBox>
+        <Button fx:id="_startButton" maxWidth="90.0" minWidth="60.0" mnemonicParsing="false" onAction="#onStart"
+            prefWidth="60.0" text="Start">
+            <HBox.margin>
+                <Insets left="5.0" right="5.0" top="20.0" />
+            </HBox.margin>
+        </Button>
+        <Button fx:id="_stepButton" maxWidth="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#onStep"
+            prefWidth="60.0" text="Step">
+            <HBox.margin>
+                <Insets left="5.0" right="5.0" top="20.0" />
+            </HBox.margin>
+        </Button>
+        <VBox minWidth="100.0" prefHeight="200.0" prefWidth="100.0">
+            <Label text="Generations">
+                <VBox.margin>
+                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                </VBox.margin>
+            </Label>
+            <Label fx:id="_generationLabel" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="60.0" text="0"
+                textAlignment="RIGHT" textFill="#e13408">
+                <VBox.margin>
+                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                </VBox.margin>
+            </Label>
+        </VBox>
+        <Region prefHeight="200.0" prefWidth="200.0" />
+    </HBox>
+    <CellPanel fx:id="_simCanvas" height="200.0" onMouseClicked="#onClick" onMouseDragged="#onDrag" width="200.0"
+        GridPane.rowIndex="1" />
+</GridPane>
