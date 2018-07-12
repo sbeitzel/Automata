@@ -24,6 +24,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import javafx.stage.Stage;
+
 /**
  * Information about the application.  A standard "About" box, to stroke ego.
  *
@@ -34,6 +36,10 @@ public class AboutDialog extends JFrame {
 
     private static String dateString = "October 3, 2003";
     private static String versionString = "1.2.4";
+
+    public static void display(Stage parent) {
+        // SBTODO actually make this the way we display the about window
+    }
 
     /**
      * Construct an About Box frame.

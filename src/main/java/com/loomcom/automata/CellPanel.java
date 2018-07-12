@@ -47,7 +47,11 @@ public class CellPanel extends Canvas implements Observer {
     private CellModel mCellModel;
 
     private boolean mShowCellOutlines = true; // Show outlines by default
-    private boolean mShowAging;
+    private boolean mShowAging = false;
+
+    public CellPanel() {
+        super();
+    }
 
     /**
      * Initialize the cell field with a model. This method will cause the CellPanel
@@ -77,6 +81,10 @@ public class CellPanel extends Canvas implements Observer {
 
     public CellModel getModel() {
         return mCellModel;
+    }
+
+    public int getCellSize() {
+        return mCellSize;
     }
 
     public Color getBackground() {

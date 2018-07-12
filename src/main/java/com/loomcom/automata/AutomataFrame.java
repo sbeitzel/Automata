@@ -467,9 +467,9 @@ public class AutomataFrame extends Rectangle implements Observer {
      *
      * @return      A map of pattern names and arrays
      */
-    private TreeMap setupGliders() {
+    public static TreeMap<String, boolean[][]> setupGliders() {
 
-        TreeMap gliderMap = new TreeMap();
+        TreeMap<String, boolean[][]> gliderMap = new TreeMap<>();
 
         // "The Glider"
         gliderMap.put("The Glider", new boolean[][] {

@@ -24,6 +24,7 @@ import java.util.Locale;
 
 import com.aquafx_project.AquaFx;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 /**
@@ -46,6 +47,7 @@ public class Launcher extends Application {
         AquaFx.style(); // this should be conditionally executed; only call on MacOS
         // display the setup dialog
         Setup.display(primaryStage);
+        Platform.setImplicitExit(true);
     }
 
     @Override

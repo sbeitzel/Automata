@@ -5,7 +5,6 @@ package com.loomcom.automata;
 
 import java.net.URL;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -39,7 +38,7 @@ public class Setup {
 
     private Stage _stage;
 
-    public static void display(Stage parent) {
+    static void display(Stage parent) {
         try {
             Stage stage = new Stage();
             stage.initOwner(parent);
@@ -58,6 +57,7 @@ public class Setup {
             stage.centerOnScreen();
         } catch (Exception e) {
             // nothing to do, really. We could log an error, but there's nothing a user can do to fix it.
+            // SBTODO add logging
         }
     }
 
@@ -118,6 +118,5 @@ public class Setup {
     @SuppressWarnings("unused")
     public void onCancel(ActionEvent evt) {
         _stage.close();
-        Platform.exit();
     }
 }

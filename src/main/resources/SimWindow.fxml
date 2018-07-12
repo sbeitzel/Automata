@@ -44,22 +44,18 @@
             </MenuItem>
         </Menu>
         <Menu mnemonicParsing="false" text="Draw">
-            <CheckMenuItem fx:id="_showOutlinesItem" mnemonicParsing="false" selected="true" text="Show Cell Outlines" />
-            <CheckMenuItem fx:id="_showAgingItem" mnemonicParsing="false" selected="true" text="Show Cell Aging" />
+            <CheckMenuItem fx:id="_showOutlinesItem" mnemonicParsing="false" selected="true" text="Show Cell Outlines" onAction="#onShowOutlines"/>
+            <CheckMenuItem fx:id="_showAgingItem" mnemonicParsing="false" selected="true" text="Show Cell Aging" onAction="#onShowAging"/>
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem fx:id="_editColorsItem" mnemonicParsing="false" onAction="#onEditColors" text="Edit Colors..." />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem fx:id="_clearDisplayItem" mnemonicParsing="false" onAction="#onClear" text="Clear Display" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <Menu fx:id="_menuGlider" mnemonicParsing="false" onAction="#onGlider" text="Draw Glider">
+            <Menu fx:id="_menuGlider" mnemonicParsing="false" text="Draw Glider">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="G" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                 </accelerator>
                 <RadioMenuItem fx:id="_noneItem" mnemonicParsing="false" selected="true" text="None" />
-                <RadioMenuItem fx:id="_fountainItem" mnemonicParsing="false" text="Fountain" />
-                <RadioMenuItem fx:id="_spaceshipItem" mnemonicParsing="false" text="Lightweight Spaceship" />
-                <RadioMenuItem fx:id="_coeshipItem" mnemonicParsing="false" text="The Coe Ship" />
-                <RadioMenuItem fx:id="_gliderItem" mnemonicParsing="false" text="The Glider" />
             </Menu>
         </Menu>
         <Menu fx:id="_ruleMenu" mnemonicParsing="false" text="Rule" />
@@ -75,7 +71,7 @@
                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                 </VBox.margin>
             </Label>
-            <ChoiceBox maxWidth="150.0" minWidth="150.0" prefWidth="150.0">
+            <ChoiceBox maxWidth="150.0" minWidth="150.0" prefWidth="150.0" fx:id="_speedBox" onAction="#onSetSpeed">
                 <VBox.margin>
                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                 </VBox.margin>

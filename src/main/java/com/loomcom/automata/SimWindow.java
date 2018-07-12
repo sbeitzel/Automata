@@ -9,12 +9,14 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -45,17 +47,19 @@ public class SimWindow implements Observer {
     @FXML public Label _generationLabel;
     @FXML public CellPanel _simCanvas;
     @FXML public RadioMenuItem _noneItem;
-    @FXML public RadioMenuItem _fountainItem;
-    @FXML public RadioMenuItem _spaceshipItem;
-    @FXML public RadioMenuItem _coeshipItem;
-    @FXML public RadioMenuItem _gliderItem;
+    @FXML public ChoiceBox<Integer> _speedBox;
 
     private Stage _stage;
     private UpdateThread _updateThread;
     private ToggleGroup _shapeGroup;
     private ToggleGroup _ruleGroup;
 
-    public static void display(Stage parent, int columns, int rows, int cellSize) {
+    // these members are for keeping track of drawing state during user interaction
+    private boolean[][] _shapeToDraw = null;
+    private int _lastCellX = -1;
+    private int _lastCellY = -1;
+
+    static void display(Stage parent, int columns, int rows, int cellSize) {
         try {
             Stage stage = new Stage();
             stage.initOwner(parent);
@@ -75,14 +79,27 @@ public class SimWindow implements Observer {
             stage.centerOnScreen();
         } catch (Exception e) {
             // nothing to do, really. We could log an error, but there's nothing a user can do to fix it.
+            // SBTODO add logging
         }
     }
 
     @FXML
     private void initialize() {
-        // establish radio groups
+        // setup the shape menu
         _shapeGroup = new ToggleGroup();
-        _shapeGroup.getToggles().addAll(_noneItem, _fountainItem, _spaceshipItem, _coeshipItem, _gliderItem);
+        _shapeGroup.getToggles().add(_noneItem);
+        _noneItem.setUserData(null);
+        Map<String, boolean[][]> shapeMap = AutomataFrame.setupGliders();
+        _shapeGroup.selectToggle(_noneItem);
+        for (Map.Entry<String, boolean[][]> entry : shapeMap.entrySet()) {
+            String name = entry.getKey();
+            boolean[][] shapeData = entry.getValue();
+            RadioMenuItem shapeItem = new RadioMenuItem(name);
+            shapeItem.setToggleGroup(_shapeGroup);
+            shapeItem.setUserData(shapeData);
+            _menuGlider.getItems().add(shapeItem);
+            shapeItem.setOnAction(this::onGlider);
+        }
 
         // populate the ruleset menu
         Map<String, RuleSet> ruleMap = AutomataFrame.setupRuleSets();
@@ -101,13 +118,27 @@ public class SimWindow implements Observer {
             ruleItem.setOnAction((event) -> ruleSetChanged(rs));
         }
 
-        // TODO set localized strings on menus, buttons, labels
+        // populate the speed choicebox
+        _speedBox.setItems(FXCollections.observableArrayList(Integer.valueOf(1),
+                                                             Integer.valueOf(2),
+                                                             Integer.valueOf(5),
+                                                             Integer.valueOf(10),
+                                                             Integer.valueOf(20)));
+        _speedBox.getSelectionModel().select(0);
+
+        // SBTODO set localized strings on menus, buttons, labels
     }
 
     private void initCellModel(int rows, int columns, int cellSize) {
         RuleSet selectedSet = (RuleSet) _ruleGroup.getSelectedToggle().getUserData();
         CellModel freshModel = new CellModel(rows, columns, selectedSet);
         _simCanvas.setModel(freshModel, cellSize);
+        if (_updateThread != null) {
+            _updateThread.doStop();
+        }
+        _updateThread = new UpdateThread(freshModel);
+        onSetSpeed(null);
+        _updateThread.start();
     }
 
     private void ruleSetChanged(RuleSet rs) {
@@ -116,32 +147,79 @@ public class SimWindow implements Observer {
         }
     }
 
+    @FXML
     public void onDrag(MouseEvent event) {
+        CellModel model = _simCanvas.getModel();
+        double x = event.getX();
+        double y = event.getY();
+        int cellX = (int) (x / _simCanvas.getCellSize());
+        int cellY = (int) (y / _simCanvas.getCellSize());
 
+        boolean drawOrErase = !event.isShiftDown(); // hold down shift to erase (set false)
+
+        if (cellX != _lastCellX || cellY != _lastCellY) {
+            model.setCell(cellX, cellY, drawOrErase);
+            _lastCellX = cellX;
+            _lastCellY = cellY;
+        }
     }
 
+    @FXML
     public void onClick(MouseEvent event) {
+        CellModel model = _simCanvas.getModel();
+        double x = event.getX();
+        double y = event.getY();
+        int cellX = (int) (x / _simCanvas.getCellSize());
+        int cellY = (int) (y / _simCanvas.getCellSize());
 
+        if (_shapeToDraw != null) {
+            model.drawShape(cellX, cellY, _shapeToDraw);
+        } else {
+            model.flipCell(cellX, cellY);
+        }
     }
 
+    @FXML
+    @SuppressWarnings("unused")
     public void onPause(ActionEvent evt) {
-
+        if (_updateThread != null) {
+            _updateThread.pause();
+            _startButton.setDisable(false);
+            _pauseButton.setDisable(true);
+        }
     }
 
+    @FXML
+    @SuppressWarnings("unused")
     public void onStart(ActionEvent evt) {
-
+        if (_updateThread != null && _updateThread.isPaused()) {
+            _startButton.setDisable(true);
+            _pauseButton.setDisable(false);
+            _updateThread.go();
+        }
     }
 
+    @FXML
+    @SuppressWarnings("unused")
     public void onAbout(ActionEvent evt) {
-
+        AboutDialog.display((Stage) _stage.getOwner());
     }
 
-    public void onGlider(ActionEvent evt) {
-
+    /**
+     * Handler for shape menu items. Since this is bound from code in the {@link #initialize()} method
+     * and not from FXML we don't need to make it public and we don't need to annotate it.
+     *
+     * @param evt the menu selection event that we're handling
+     */
+    @SuppressWarnings("unused")
+    private void onGlider(ActionEvent evt) {
+        _shapeToDraw = (boolean[][]) _shapeGroup.getSelectedToggle().getUserData();
     }
 
+    @FXML
     public void onClear(ActionEvent evt) {
-
+        onPause(evt);
+        _simCanvas.getModel().reset();
     }
 
     public void onEditColors(ActionEvent evt) {
@@ -182,6 +260,27 @@ public class SimWindow implements Observer {
             r.run();
         } else {
             Platform.runLater(r);
+        }
+    }
+
+    @FXML
+    @SuppressWarnings("unused")
+    public void onShowAging(ActionEvent evt) {
+        _simCanvas.setCellAging(_showAgingItem.isSelected());
+    }
+
+    @FXML
+    @SuppressWarnings("unused")
+    public void onShowOutlines(ActionEvent evt) {
+        _simCanvas.showCellOutlines(_showOutlinesItem.isSelected());
+    }
+
+    @FXML
+    @SuppressWarnings("unused")
+    public void onSetSpeed(ActionEvent evt) {
+        int speed = _speedBox.getValue().intValue();
+        if (_updateThread != null) {
+            _updateThread.setSleepInterval(1000 / speed);
         }
     }
 }
