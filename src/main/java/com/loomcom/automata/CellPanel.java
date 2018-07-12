@@ -93,6 +93,7 @@ public class CellPanel extends Canvas implements Observer {
 
     public void setBackground(Color c) {
         mBackground = c;
+        schedulePaint();
     }
 
     public Color getForeground() {
@@ -101,6 +102,7 @@ public class CellPanel extends Canvas implements Observer {
 
     public void setForeground(Color c) {
         mForeground = c;
+        schedulePaint();
     }
 
     /**
@@ -110,6 +112,7 @@ public class CellPanel extends Canvas implements Observer {
      */
     public void setOutline(Color c) {
         mOutlineColor = c;
+        schedulePaint();
     }
 
     /**
@@ -126,6 +129,10 @@ public class CellPanel extends Canvas implements Observer {
      */
     @Override
     public void update(Observable t, Object o) {
+        schedulePaint();
+    }
+
+    public void schedulePaint() {
         // cause the cell field to be redrawn.
         if (Platform.isFxApplicationThread()) {
             paint();
@@ -212,6 +219,7 @@ public class CellPanel extends Canvas implements Observer {
      */
     public void setCellAging(boolean b) {
         mShowAging = b;
+        schedulePaint();
     }
 
     /**

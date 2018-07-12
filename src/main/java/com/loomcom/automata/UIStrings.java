@@ -19,14 +19,20 @@ public class UIStrings {
     public static final String BUTTON_START = "button.start";
     public static final String BUTTON_STEP = "button.step";
 
+    public static final String DIALOG_ABOUT_TITLE = "dialog.about.title";
+    public static final String DIALOG_COLOR_TITLE = "dialog.color.title";
+
     public static final String ERROR_TEXT_DIMENSIONS_SMALL = "error.text.dimensions.small";
     public static final String ERROR_TEXT_DIMENSIONS_LARGE = "error.text.dimensions.large";
     public static final String ERROR_NUMBERS_ONLY = "error.text.numbersOnly";
 
+    public static final String LABEL_BACKGROUND = "label.background";
     public static final String LABEL_CELLSIZE = "label.cellSize";
     public static final String LABEL_COLUMNS = "label.columns";
     public static final String LABEL_CREATE="label.create";
+    public static final String LABEL_FOREGROUND = "label.foreground";
     public static final String LABEL_INPIXELS = "label.inPixels";
+    public static final String LABEL_OUTLINE = "label.outline";
     public static final String LABEL_ROWS = "label.rows";
 
     public static final String WINDOW_SETUP_TITLE = "window.setup.title";

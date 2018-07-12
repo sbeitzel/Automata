@@ -4,9 +4,11 @@ package com.loomcom.automata;
  */
 
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.TreeMap;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -83,13 +85,142 @@ public class SimWindow implements Observer {
         }
     }
 
+    /**
+     * A list of built-in shapes we can draw.  Most of these are
+     * gliders in the Life rule set, as well as some others.
+     *
+     * @return      A map of pattern names and arrays
+     */
+    private static TreeMap<String, boolean[][]> setupGliders() {
+
+        TreeMap<String, boolean[][]> gliderMap = new TreeMap<>();
+
+        // "The Glider"
+        gliderMap.put("The Glider", new boolean[][] {
+                          {true, false, false},   // Row 1
+                          {true, false, true},    // Row 2
+                          {true, true, false}     // Row 3
+                      });
+
+        // A "Fountain" glider
+        gliderMap.put("Fountain", new boolean[][] {
+                          {true, true, true, false, false, false},
+                          {true, false, false, false, true, true},
+                          {false, true, true, true, true, true},
+                          {false, false, false, false, false, false},
+                          {false, true, true, true, true, true},
+                          {true, false, false, false, true, true},
+                          {true, true, true, false, false, false}
+                      });
+
+        // "The Coe Ship" glider
+        gliderMap.put("The Coe Ship", new boolean[][] {
+                          {false, true, true, false, false, false, false, false, false, false},
+                          {true, true, false, true, true, false, false, false, false, false},
+                          {false, true, true, true, true, false, false, false, false, false},
+                          {false, false, true, true, false, false, false, false, false, false},
+                          {false, false, false, true, false, false, false, false, false, false},
+                          {false, true, false, false, false, true, false, false, false, false},
+                          {true, false, false, false, false, false, true, false, true, true},
+                          {true, false, false, false, false, false, true, true, false, false},
+                          {true, true, true, true, true, true, false, false, false, false},
+                      });
+
+        // "Lightweight Spaceship" glider
+        gliderMap.put("Lightweight Spaceship", new boolean[][] {
+                          {false, true, true, true},
+                          {true, false, false, true},
+                          {false, false, false, true},
+                          {false, false, false, true},
+                          {true, false, true, false}
+                      });
+
+        // More, as time permits...
+        return gliderMap;
+    }
+
+    /**
+     * Populate the list of rule sets.
+     *
+     * NOTE:  To add new rule sets to the application, list 'em here!
+     * Future versions will allow creation of new rule sets on the fly at
+     * through a nifty dialog.
+     */
+    private static TreeMap<String, RuleSet> setupRuleSets() {
+
+        LinkedList<RuleSet> rules = new LinkedList<>();
+        TreeMap<String, RuleSet> rulesMap = new TreeMap<>();
+
+        // Start with the classic.
+        rules.add(new RuleSet("Life", new int[]{3}, new int[]{2,3}));
+
+        rules.add(new RuleSet("Amoeba", new int[]{3,5,7}, new int[]{1,3,5,8}));
+        rules.add(new RuleSet("Assimilation", new int[]{3,4,5},
+                              new int[]{4,5,6,7}));
+        rules.add(new RuleSet("Bacteria", new int[]{3,4}, new int[]{4,5,6}));
+        rules.add(new RuleSet("Blinkers", new int[]{3,4,5}, new int[]{2}));
+        rules.add(new RuleSet("Blossom", new int[]{2,3}, new int[]{2,3}));
+        rules.add(new RuleSet("Bugs", new int[]{3,5,6,7},
+                              new int[]{1,5,6,7,8}));
+        rules.add(new RuleSet("Coagulations", new int[]{3,7,8},
+                              new int[]{2,3,5,6,7,8}));
+        rules.add(new RuleSet("Coral", new int[]{3},
+                              new int[]{4,5,6,7,8}));
+        rules.add(new RuleSet("Day & Night", new int[]{3,6,7,8},
+                              new int[]{3,4,6,7,8}));
+        rules.add(new RuleSet("Diamoeba", new int[]{3,5,6,7,8},
+                              new int[]{5,6,7,8}));
+        rules.add(new RuleSet("Gnarl", new int[]{1}, new int[]{1}));
+        rules.add(new RuleSet("H-trees", new int[]{1},
+                              new int[]{0,1,2,3,4,5,6,7,8}));
+        rules.add(new RuleSet("HighLife", new int[]{3,6}, new int[]{2,3}));
+        rules.add(new RuleSet("Holstein", new int[]{3,5,6,7,8},
+                              new int[]{4,6,7,8}));
+        rules.add(new RuleSet("Iceballs", new int[]{2,5,6,7,8},
+                              new int[]{5,6,7,8}));
+        rules.add(new RuleSet("Land Rush", new int[]{3,6},
+                              new int[]{2,3,4,5,7,8}));
+        rules.add(new RuleSet("Life Without Death", new int[]{3},
+                              new int[]{0,1,2,3,4,5,6,7,8}));
+        rules.add(new RuleSet("LongLife", new int[]{3,4,5}, new int[]{5}));
+        rules.add(new RuleSet("Majority", new int[]{4,5,6,7,8},
+                              new int[]{5,6,7,8}));
+        rules.add(new RuleSet("Maze", new int[]{3}, new int[]{1,2,3,4,5}));
+        rules.add(new RuleSet("Move", new int[]{3,6,8}, new int[]{2,4,5}));
+        rules.add(new RuleSet("Pseudo Life", new int[]{3,5,7},
+                              new int[]{2,3,8}));
+        rules.add(new RuleSet("Replicator", new int[]{1,3,5,7},
+                              new int[]{1,3,5,7}));
+        rules.add(new RuleSet("Seeds", new int[]{2},
+                              new int[]{}));
+        rules.add(new RuleSet("Serviettes", new int[]{2,3,4},
+                              new int[]{}));
+
+        // Rulesets without nicknames
+        rules.add(new RuleSet(new int[]{2,4,8}, new int[]{2,4,8}));
+        rules.add(new RuleSet(new int[]{3,4,5}, new int[]{2,4,5}));
+        rules.add(new RuleSet(new int[]{3,4}, new int[]{2,5}));
+        rules.add(new RuleSet(new int[]{3,5}, new int[]{2,4}));
+
+        // "Probabilistic" rulesets
+        rules.add(new ChanceRuleSet("Randomized Life", new int[]{3},
+                                    new int[]{2,3},
+                                    99.0, 99.0));
+
+        for (RuleSet r : rules) {
+            rulesMap.put(r.getName(), r);
+        }
+
+        return rulesMap;
+    }
+
     @FXML
     private void initialize() {
         // setup the shape menu
         _shapeGroup = new ToggleGroup();
         _shapeGroup.getToggles().add(_noneItem);
         _noneItem.setUserData(null);
-        Map<String, boolean[][]> shapeMap = AutomataFrame.setupGliders();
+        Map<String, boolean[][]> shapeMap = setupGliders();
         _shapeGroup.selectToggle(_noneItem);
         for (Map.Entry<String, boolean[][]> entry : shapeMap.entrySet()) {
             String name = entry.getKey();
@@ -102,7 +233,7 @@ public class SimWindow implements Observer {
         }
 
         // populate the ruleset menu
-        Map<String, RuleSet> ruleMap = AutomataFrame.setupRuleSets();
+        Map<String, RuleSet> ruleMap = setupRuleSets();
         _ruleGroup = new ToggleGroup();
         boolean isSet = false;
         for (Map.Entry<String, RuleSet> entry : ruleMap.entrySet()) {
@@ -134,6 +265,7 @@ public class SimWindow implements Observer {
         RuleSet selectedSet = (RuleSet) _ruleGroup.getSelectedToggle().getUserData();
         CellModel freshModel = new CellModel(rows, columns, selectedSet);
         _simCanvas.setModel(freshModel, cellSize);
+        _simCanvas.schedulePaint();
         if (_updateThread != null) {
             _updateThread.doStop();
         }
@@ -141,7 +273,6 @@ public class SimWindow implements Observer {
         onSetSpeed(null);
         _updateThread.start();
     }
-
 
     private void ruleSetChanged(RuleSet rs) {
         if (_simCanvas.getModel() != null) {
@@ -205,7 +336,7 @@ public class SimWindow implements Observer {
     @FXML
     @SuppressWarnings("unused")
     public void onAbout(ActionEvent evt) {
-        AboutDialog.display((Stage) _stage.getOwner());
+        AboutDialog.display();
     }
 
     /**
@@ -225,8 +356,11 @@ public class SimWindow implements Observer {
         _simCanvas.getModel().reset();
     }
 
+    @FXML
+    @SuppressWarnings("unused")
     public void onEditColors(ActionEvent evt) {
-
+        ColorDialog.display(_simCanvas.getForeground(), _simCanvas.getBackground(), _simCanvas.getOutline(),
+                            _simCanvas::setForeground, _simCanvas::setBackground, _simCanvas::setOutline);
     }
 
     @FXML

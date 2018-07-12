@@ -51,7 +51,7 @@ public class Setup {
             setup._stage = stage;
 
             stage.setTitle(UIStrings.getString(UIStrings.WINDOW_SETUP_TITLE));
-            stage.setScene(new javafx.scene.Scene(root, 190, 370));
+            stage.setScene(new javafx.scene.Scene(root, 370, 190));
             stage.initModality(Modality.WINDOW_MODAL);
             stage.show();
             stage.centerOnScreen();

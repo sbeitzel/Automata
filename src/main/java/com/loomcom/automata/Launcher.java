@@ -22,7 +22,6 @@ package com.loomcom.automata;
 
 import java.util.Locale;
 
-import com.aquafx_project.AquaFx;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -34,27 +33,11 @@ import javafx.stage.Stage;
  * @version $Id: Launcher.java,v 1.7 2003/10/13 04:00:24 sethm Exp $
  */
 public class Launcher extends Application {
-    // Static reference to ourself
-    private static Launcher mLauncher;
-
-    private Stage _primary;
-
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         UIStrings.init(Locale.getDefault());
-        mLauncher = this;
-        _primary = primaryStage;
-        AquaFx.style(); // this should be conditionally executed; only call on MacOS
         // display the setup dialog
         Setup.display(primaryStage);
         Platform.setImplicitExit(true);
-    }
-
-    @Override
-    public void stop() {
-    }
-
-    public static Stage getPrimaryStage() {
-        return mLauncher._primary;
     }
 }

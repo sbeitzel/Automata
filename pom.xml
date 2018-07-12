@@ -34,7 +34,6 @@
     </contributors>
 
     <properties>
-        <aquafx.version>0.2</aquafx.version>
         <javafx-maven-plugin.version>8.8.3</javafx-maven-plugin.version>
         <jfx.bundler>dmg</jfx.bundler>
         <jfxapp.mac.bundleIdentifier>com.loomcom.automata</jfxapp.mac.bundleIdentifier>
@@ -57,11 +56,6 @@
     </prerequisites>
 
     <dependencies>
-        <dependency>
-            <groupId>com.aquafx-project</groupId>
-            <artifactId>aquafx</artifactId>
-            <version>${aquafx.version}</version>
-        </dependency>
     </dependencies>
 
     <build>

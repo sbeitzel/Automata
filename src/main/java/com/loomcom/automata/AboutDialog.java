@@ -20,11 +20,16 @@
 
 package com.loomcom.automata;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
 
-import javafx.stage.Stage;
+import java.net.URL;
+
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
+import javafx.scene.web.WebView;
 
 /**
  * Information about the application.  A standard "About" box, to stroke ego.
@@ -32,85 +37,38 @@ import javafx.stage.Stage;
  * @author Seth Morabito
  * @version $Id: AboutDialog.java,v 1.11 2003/10/04 00:37:59 sethm Exp $
  */
-public class AboutDialog extends JFrame {
+public class AboutDialog {
 
-    private static String dateString = "October 3, 2003";
-    private static String versionString = "1.2.4";
+    @FXML public WebView _webView;
 
-    public static void display(Stage parent) {
-        // SBTODO actually make this the way we display the about window
+    public static void display() {
+        try {
+            URL layout = Thread.currentThread().getContextClassLoader()
+                               .getResource("AboutDialog.fxml");
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(layout);
+            DialogPane content = loader.load();
+
+            ButtonType ok = new ButtonType(UIStrings.getString(UIStrings.BUTTON_OK), ButtonBar.ButtonData.OK_DONE);
+            content.getButtonTypes().add(ok);
+
+            Dialog<ButtonType> theDialog = new Dialog<>();
+            theDialog.setTitle(UIStrings.getString(UIStrings.DIALOG_ABOUT_TITLE));
+            theDialog.setDialogPane(content);
+            theDialog.showAndWait();
+        } catch (Exception e) {
+            // SBTODO add logging
+        }
     }
 
-    /**
-     * Construct an About Box frame.
-     */
-    public AboutDialog() {
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
-        JPanel infoPanel = new JPanel();
-        infoPanel.setBorder(BorderFactory.createEmptyBorder(18,18,18,18));
-        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
-
-        Font largeFont = new Font("SansSerif", Font.BOLD, 18);
-        Font midFont = new Font("SansSerif", Font.BOLD, 14);
-        Font textFont = new Font("SansSerif", Font.PLAIN, 14);
-        Font smallFont = new Font("SansSerif", Font.PLAIN, 10);
-
-        JLabel nameLabel = new JLabel("Cellular Automata Explorer");
-        nameLabel.setFont(largeFont);
-        nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        JLabel authorLabel = new JLabel("Seth Morabito");
-        authorLabel.setFont(midFont);
-        authorLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        JLabel companyLabel = new JLabel("Loom Communications");
-        companyLabel.setFont(textFont);
-        companyLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        JLabel urlLabel = new JLabel("http://www.loomcom.com/");
-        urlLabel.setFont(textFont);
-        urlLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        JLabel versionLabel = new JLabel("Version " + versionString);
-        versionLabel.setFont(smallFont);
-        versionLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        JLabel dateLabel = new JLabel(dateString);
-        dateLabel.setFont(smallFont);
-        dateLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        JTextArea license =
-            new JTextArea("Distributed under the terms of the GNU\n" +
-                          "Public License.  For details, see the file\n" +
-                          "LICENSE.TXT, or http://www.gnu.org/licenses/gpl.html");
-        license.setFont(smallFont);
-        license.setEditable(false);
-        license.setBackground(getBackground());
-        license.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-
-        infoPanel.add(nameLabel);
-        infoPanel.add(Box.createRigidArea(new Dimension(0,10)));
-        infoPanel.add(authorLabel);
-        infoPanel.add(companyLabel);
-        infoPanel.add(urlLabel);
-        infoPanel.add(versionLabel);
-        infoPanel.add(dateLabel);
-        infoPanel.add(Box.createRigidArea(new Dimension(0,10)));
-        infoPanel.add(license);
-
-        JButton okButton = new JButton("OK");
-        okButton.setSelected(true);
-
-        okButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent evt) {
-                    dispose();
-                }
-            });
-
-        JPanel buttonBar = new JPanel();
-        buttonBar.setLayout(new FlowLayout(FlowLayout.CENTER));
-
-        buttonBar.add(okButton);
-
-        getContentPane().add(infoPanel, BorderLayout.CENTER);
-        getContentPane().add(buttonBar, BorderLayout.SOUTH);
-
-        setResizable(false);
+    @FXML
+    private void initialize() {
+        try {
+            URL aboutURL = Thread.currentThread().getContextClassLoader().getResource("AboutPage.html");
+            assert aboutURL != null;
+            _webView.getEngine().load(aboutURL.toString());
+        } catch (Exception e) {
+            // SBTODO add logging
+        }
     }
 }
