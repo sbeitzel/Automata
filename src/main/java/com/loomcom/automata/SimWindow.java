@@ -43,11 +43,11 @@ public class SimWindow implements Observer {
     @FXML public MenuItem _aboutItem;
     @FXML public Label _generationsLabel;
     @FXML public Button _startButton;
-    @FXML public Button _pauseButton;
     @FXML public Label _generationLabel;
     @FXML public CellPanel _simCanvas;
     @FXML public RadioMenuItem _noneItem;
     @FXML public ChoiceBox<Integer> _speedBox;
+    public Button _stepButton;
 
     private Stage _stage;
     private UpdateThread _updateThread;
@@ -127,6 +127,7 @@ public class SimWindow implements Observer {
         _speedBox.getSelectionModel().select(0);
 
         // SBTODO set localized strings on menus, buttons, labels
+        _stepButton.setText(UIStrings.getString(UIStrings.BUTTON_STEP));
     }
 
     private void initCellModel(int rows, int columns, int cellSize) {
@@ -140,6 +141,7 @@ public class SimWindow implements Observer {
         onSetSpeed(null);
         _updateThread.start();
     }
+
 
     private void ruleSetChanged(RuleSet rs) {
         if (_simCanvas.getModel() != null) {
@@ -179,13 +181,13 @@ public class SimWindow implements Observer {
         }
     }
 
-    @FXML
     @SuppressWarnings("unused")
-    public void onPause(ActionEvent evt) {
+    private void onPause(ActionEvent evt) {
         if (_updateThread != null) {
             _updateThread.pause();
-            _startButton.setDisable(false);
-            _pauseButton.setDisable(true);
+            _startButton.setText(UIStrings.getString(UIStrings.BUTTON_START));
+            _startButton.setOnAction(this::onStart);
+            _stepButton.setDisable(false);
         }
     }
 
@@ -193,8 +195,9 @@ public class SimWindow implements Observer {
     @SuppressWarnings("unused")
     public void onStart(ActionEvent evt) {
         if (_updateThread != null && _updateThread.isPaused()) {
-            _startButton.setDisable(true);
-            _pauseButton.setDisable(false);
+            _startButton.setText(UIStrings.getString(UIStrings.BUTTON_PAUSE));
+            _startButton.setOnAction(this::onPause);
+            _stepButton.setDisable(true);
             _updateThread.go();
         }
     }
@@ -282,5 +285,11 @@ public class SimWindow implements Observer {
         if (_updateThread != null) {
             _updateThread.setSleepInterval(1000 / speed);
         }
+    }
+
+    @FXML
+    @SuppressWarnings("unused")
+    public void onStep(ActionEvent evt) {
+        _simCanvas.getModel().transform();
     }
 }

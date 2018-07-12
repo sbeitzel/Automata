@@ -15,6 +15,9 @@ import java.util.ResourceBundle;
 public class UIStrings {
     public static final String BUTTON_CANCEL = "button.cancel";
     public static final String BUTTON_OK = "button.ok";
+    public static final String BUTTON_PAUSE = "button.pause";
+    public static final String BUTTON_START = "button.start";
+    public static final String BUTTON_STEP = "button.step";
 
     public static final String ERROR_TEXT_DIMENSIONS_SMALL = "error.text.dimensions.small";
     public static final String ERROR_TEXT_DIMENSIONS_LARGE = "error.text.dimensions.large";
