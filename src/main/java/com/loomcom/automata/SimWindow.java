@@ -264,6 +264,10 @@ public class SimWindow implements Observer {
     private void initCellModel(int rows, int columns, int cellSize) {
         RuleSet selectedSet = (RuleSet) _ruleGroup.getSelectedToggle().getUserData();
         CellModel freshModel = new CellModel(rows, columns, selectedSet);
+        freshModel.addObserver(this);
+        if (_simCanvas.getModel() != null) {
+            _simCanvas.getModel().deleteObserver(this);
+        }
         _simCanvas.setModel(freshModel, cellSize);
         _simCanvas.schedulePaint();
         if (_updateThread != null) {
