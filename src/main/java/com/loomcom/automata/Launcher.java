@@ -50,7 +50,6 @@ public class Launcher extends Application {
 
     @Override
     public void stop() {
-
     }
 
     public static Stage getPrimaryStage() {

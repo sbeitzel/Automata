@@ -55,6 +55,7 @@ public class Setup {
             stage.setScene(new javafx.scene.Scene(root, 190, 370));
             stage.initModality(Modality.WINDOW_MODAL);
             stage.show();
+            stage.centerOnScreen();
         } catch (Exception e) {
             // nothing to do, really. We could log an error, but there's nothing a user can do to fix it.
         }
@@ -100,6 +101,7 @@ public class Setup {
                     alert.showAndWait();
                 } else {
                     // create a new sim window
+                    SimWindow.display((Stage) _stage.getOwner(), columns, rows, cellSize);
                     // hide the setup window
                     _stage.close();
                 }

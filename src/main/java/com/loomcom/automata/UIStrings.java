@@ -27,6 +27,7 @@ public class UIStrings {
     public static final String LABEL_ROWS = "label.rows";
 
     public static final String WINDOW_SETUP_TITLE = "window.setup.title";
+    public static final String WINDOW_SIM_TITLE = "window.sim.title";
 
     private static ResourceBundle BUNDLE;
 

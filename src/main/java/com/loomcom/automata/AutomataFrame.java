@@ -522,7 +522,7 @@ public class AutomataFrame extends Rectangle implements Observer {
      * Future versions will allow creation of new rule sets on the fly at
      * through a nifty dialog.
      */
-    private TreeMap setupRuleSets() {
+    public static TreeMap<String, RuleSet> setupRuleSets() {
 
         LinkedList<RuleSet> rules = new LinkedList<>();
         TreeMap<String, RuleSet> rulesMap = new TreeMap<>();
