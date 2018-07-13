@@ -38,7 +38,8 @@
         <jfx.bundler>dmg</jfx.bundler>
         <jfxapp.mac.bundleIdentifier>com.loomcom.automata</jfxapp.mac.bundleIdentifier>
         <jfxapp.mac.signing-key /> <!-- This should be defined in settings.xml on the build machine. It's the Apple Developer signing key ID. -->
-        <jfxapp.name>Automata Explorer</jfxapp.name>
+        <jfxapp.name>Automata</jfxapp.name>
+        <logback.version>1.2.3</logback.version>
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
         <maven-enforcer-plugin.version>3.0.0-M1</maven-enforcer-plugin.version>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -48,6 +49,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.bundle.mainclass>com.loomcom.automata.Launcher</project.bundle.mainclass>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <slf4j.version>1.7.25</slf4j.version>
         <versions-maven-plugin.version>2.4</versions-maven-plugin.version>
     </properties>
 
@@ -56,6 +58,17 @@
     </prerequisites>
 
     <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+        	<groupId>ch.qos.logback</groupId>
+        	<artifactId>logback-classic</artifactId>
+        	<version>${logback.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

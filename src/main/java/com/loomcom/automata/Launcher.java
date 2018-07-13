@@ -23,7 +23,6 @@ package com.loomcom.automata;
 import java.util.Locale;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.stage.Stage;
 
 /**
@@ -38,6 +37,5 @@ public class Launcher extends Application {
         UIStrings.init(Locale.getDefault());
         // display the setup dialog
         Setup.display(primaryStage);
-        Platform.setImplicitExit(true);
     }
 }

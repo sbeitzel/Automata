@@ -30,6 +30,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.web.WebView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Information about the application.  A standard "About" box, to stroke ego.
@@ -38,6 +40,7 @@ import javafx.scene.web.WebView;
  * @version $Id: AboutDialog.java,v 1.11 2003/10/04 00:37:59 sethm Exp $
  */
 public class AboutDialog {
+    private static final Logger __l = LoggerFactory.getLogger(AboutDialog.class);
 
     @FXML public WebView _webView;
 
@@ -57,7 +60,7 @@ public class AboutDialog {
             theDialog.setDialogPane(content);
             theDialog.showAndWait();
         } catch (Exception e) {
-            // SBTODO add logging
+            __l.error("Unrecoverable exception while showing the About dialog", e);
         }
     }
 
@@ -68,7 +71,7 @@ public class AboutDialog {
             assert aboutURL != null;
             _webView.getEngine().load(aboutURL.toString());
         } catch (Exception e) {
-            // SBTODO add logging
+            __l.error("Exception loading the about page into the dialog", e);
         }
     }
 }

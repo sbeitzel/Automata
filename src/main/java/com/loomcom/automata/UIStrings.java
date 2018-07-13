@@ -35,13 +35,15 @@ public class UIStrings {
     public static final String LABEL_OUTLINE = "label.outline";
     public static final String LABEL_ROWS = "label.rows";
 
+    public static final String MENU_GLIDER = "menu.glider";
+
     public static final String WINDOW_SETUP_TITLE = "window.setup.title";
     public static final String WINDOW_SIM_TITLE = "window.sim.title";
 
     private static ResourceBundle BUNDLE;
 
     public static void init(Locale uiLocale) {
-        BUNDLE = ResourceBundle.getBundle("uistrings", uiLocale);
+        BUNDLE = ResourceBundle.getBundle("uiStrings", uiLocale);
     }
 
     public static String getString(String key) {

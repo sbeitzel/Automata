@@ -17,6 +17,8 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * FX version of the color chooser dialog
@@ -24,6 +26,7 @@ import javafx.scene.paint.Color;
  * @author Stephen Beitzel &lt;sbeitzel@pobox.com&gt;
  */
 public class ColorDialog {
+    private static final Logger __l = LoggerFactory.getLogger(ColorDialog.class);
 
     @FXML public Label _foregroundLabel;
     @FXML public ColorPicker _foreground;
@@ -62,7 +65,7 @@ public class ColorDialog {
                 olConsumer.accept(cd._outlinePicker.getValue());
             }
         } catch (Exception e) {
-            // SBTODO add logging
+            __l.error("Exception displaying the color chooser dialog", e);
         }
     }
 

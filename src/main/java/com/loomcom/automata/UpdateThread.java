@@ -20,6 +20,9 @@
 
 package com.loomcom.automata;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Thread which updates the cell model.
  *
@@ -27,6 +30,8 @@ package com.loomcom.automata;
  * @version $Id: UpdateThread.java,v 1.5 2003/10/04 01:23:14 sethm Exp $
  */
 public class UpdateThread extends Thread {
+    private static final Logger __l = LoggerFactory.getLogger(UpdateThread.class);
+
     private CellModel mCellModel;
     private int mSleepInterval;
     private boolean mStop = false;
@@ -59,8 +64,7 @@ public class UpdateThread extends Thread {
                         mPause = false;
                     }
                 } catch (InterruptedException ex) {
-                    // SBTODO add logging
-                    System.out.println(ex);
+                    __l.warn("Interrupted while pausing", ex);
                 }
             }
 
@@ -70,8 +74,7 @@ public class UpdateThread extends Thread {
             try {
                 Thread.sleep(mSleepInterval);
             } catch (InterruptedException ex) {
-                // SBTODO add logging
-                System.out.println(ex);
+                __l.warn("Interrupted while waiting during run", ex);
             }
         }
     }

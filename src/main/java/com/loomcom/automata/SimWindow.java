@@ -26,6 +26,8 @@ import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Controller for the automata scene
@@ -33,6 +35,7 @@ import javafx.stage.Stage;
  * @author Stephen Beitzel &lt;sbeitzel@pobox.com&gt;
  */
 public class SimWindow implements Observer {
+    private static final Logger __l = LoggerFactory.getLogger(SimWindow.class);
 
     @FXML public MenuItem _newItem;
     @FXML public MenuItem _quitItem;
@@ -81,7 +84,7 @@ public class SimWindow implements Observer {
             stage.centerOnScreen();
         } catch (Exception e) {
             // nothing to do, really. We could log an error, but there's nothing a user can do to fix it.
-            // SBTODO add logging
+            __l.error("Exception displaying the main automata window", e);
         }
     }
 
@@ -220,6 +223,7 @@ public class SimWindow implements Observer {
         _shapeGroup = new ToggleGroup();
         _shapeGroup.getToggles().add(_noneItem);
         _noneItem.setUserData(null);
+        _noneItem.setOnAction(this::onGlider);
         Map<String, boolean[][]> shapeMap = setupGliders();
         _shapeGroup.selectToggle(_noneItem);
         for (Map.Entry<String, boolean[][]> entry : shapeMap.entrySet()) {
@@ -255,10 +259,11 @@ public class SimWindow implements Observer {
                                                              Integer.valueOf(5),
                                                              Integer.valueOf(10),
                                                              Integer.valueOf(20)));
-        _speedBox.getSelectionModel().select(0);
+        _speedBox.getSelectionModel().select(4);
 
         // SBTODO set localized strings on menus, buttons, labels
         _stepButton.setText(UIStrings.getString(UIStrings.BUTTON_STEP));
+        _menuGlider.setText(UIStrings.getString(UIStrings.MENU_GLIDER));
     }
 
     private void initCellModel(int rows, int columns, int cellSize) {

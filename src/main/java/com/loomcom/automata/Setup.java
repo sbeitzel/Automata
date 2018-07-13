@@ -17,6 +17,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Controller for the setup dialog.
@@ -24,6 +26,7 @@ import javafx.stage.Stage;
  * @author Stephen Beitzel &lt;sbeitzel@pobox.com&gt;
  */
 public class Setup {
+    private static final Logger __l = LoggerFactory.getLogger(Setup.class);
 
     @FXML public Label _createLabel;
     @FXML public Label _columnLabel;
@@ -57,7 +60,7 @@ public class Setup {
             stage.centerOnScreen();
         } catch (Exception e) {
             // nothing to do, really. We could log an error, but there's nothing a user can do to fix it.
-            // SBTODO add logging
+            __l.error("Exception displaying the setup dialog", e);
         }
     }
 
