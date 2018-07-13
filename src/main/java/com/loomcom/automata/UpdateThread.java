@@ -20,6 +20,9 @@
 
 package com.loomcom.automata;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Thread which updates the cell model.
  *
@@ -27,37 +30,41 @@ package com.loomcom.automata;
  * @version $Id: UpdateThread.java,v 1.5 2003/10/04 01:23:14 sethm Exp $
  */
 public class UpdateThread extends Thread {
-    CellModel mCellModel;
-    int mSleepInterval;
-    boolean mStop = false;
-    boolean mPause = true;
+    private static final Logger __l = LoggerFactory.getLogger(UpdateThread.class);
 
-    public UpdateThread(CellModel m) {
+    private CellModel mCellModel;
+    private int mSleepInterval;
+    private boolean mStop = false;
+    private boolean mPause = true;
+
+    UpdateThread(CellModel m) {
         mCellModel = m;
+        setDaemon(true);
     }
 
-        /**
-         * Set the delay between each cell data update.
-         *
-         * @param i The delay, in milliseconds.
-         */
-    public void setSleepInterval(int i) {
+    /**
+     * Set the delay between each cell data update.
+     *
+     * @param i The delay, in milliseconds.
+     */
+    void setSleepInterval(int i) {
         mSleepInterval = i;
     }
 
     /**
      * Transform the cell model, then wait for a specified time and loop.
      */
+    @Override
     public void run() {
         while (!mStop) {
             while (mPause) {
                 try {
-                    synchronized(this) {
+                    synchronized (this) {
                         wait();
                         mPause = false;
                     }
                 } catch (InterruptedException ex) {
-                    System.out.println(ex);
+                    __l.warn("Interrupted while pausing", ex);
                 }
             }
 
@@ -67,7 +74,7 @@ public class UpdateThread extends Thread {
             try {
                 Thread.sleep(mSleepInterval);
             } catch (InterruptedException ex) {
-                System.out.println(ex);
+                __l.warn("Interrupted while waiting during run", ex);
             }
         }
     }
@@ -75,16 +82,16 @@ public class UpdateThread extends Thread {
     /**
      * Start updating the cell data if the thread is currently paused.
      */
-    public synchronized void go() {
+    synchronized void go() {
+        mPause = false;
         this.notifyAll();
     }
 
     /**
      * Pause the thread.  The thread can be started again using
      * the <tt>go()</tt> method.
-     *
      */
-    public void pause() {
+    void pause() {
         mPause = true;
     }
 
@@ -92,17 +99,17 @@ public class UpdateThread extends Thread {
      * Stop the thread.  The thread cannot be started again once
      * it has been stopped.
      */
-    public void doStop() {
+    void doStop() {
         mStop = true;
     }
 
     /**
      * Returns true of the thread is paused (not updating the model).
      *
-     * @return  true if the thread is not currently updating
-     *                  the cell data (i.e., in a wait state)
+     * @return true if the thread is not currently updating
+     * the cell data (i.e., in a wait state)
      */
-    public boolean isPaused() {
+    boolean isPaused() {
         return mPause;
     }
 }

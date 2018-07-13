@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- For all the properties we could use during packaging, take a look at
+     https://docs.oracle.com/javase/9/tools/javapackager.htm#GUID-E51F9601-E121-4A50-BCA7-C7F8730078B2__OSXAPPLICATIONBUNDLERARGUMENTS-26C98D56
+     since the javafx-maven-plugin winds up calling through to the javapackager tool. -->
+
+    <groupId>com.loomcom</groupId>
+    <artifactId>Automata</artifactId>
+    <version>1.2.5</version>
+    <description>Cellular automata explorer</description>
+    <packaging>jar</packaging>
+
+    <organization>
+        <name>loomcom</name>
+        <url>https://loomcom.com/</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <name>Seth Morabito</name>
+            <email>web@loomcom.com</email>
+        </developer>
+    </developers>
+
+    <contributors>
+        <contributor>
+            <name>Stephen Beitzel</name>
+            <email>sbeitzel@pobox.com</email>
+            <organization>QBCPS</organization>
+        </contributor>
+    </contributors>
+
+    <properties>
+        <javafx-maven-plugin.version>8.8.3</javafx-maven-plugin.version>
+        <jfx.bundler>dmg</jfx.bundler>
+        <jfxapp.mac.bundleIdentifier>com.loomcom.automata</jfxapp.mac.bundleIdentifier>
+        <jfxapp.mac.signing-key /> <!-- This should be defined in settings.xml on the build machine. It's the Apple Developer signing key ID. -->
+        <jfxapp.name>Automata</jfxapp.name>
+        <logback.version>1.2.3</logback.version>
+        <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+        <maven-enforcer-plugin.version>3.0.0-M1</maven-enforcer-plugin.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.version.required>3.0</maven.version.required>
+        <native-release-version>1.2.5</native-release-version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.bundle.mainclass>com.loomcom.automata.Launcher</project.bundle.mainclass>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <slf4j.version>1.7.25</slf4j.version>
+        <versions-maven-plugin.version>2.4</versions-maven-plugin.version>
+    </properties>
+
+    <prerequisites>
+        <maven>${maven.version.required}</maven>
+    </prerequisites>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+        	<groupId>ch.qos.logback</groupId>
+        	<artifactId>logback-classic</artifactId>
+        	<version>${logback.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${jfxapp.name}</finalName>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>${maven-enforcer-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>${maven.version.required}</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>${versions-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>display-dependency-updates</goal>
+                            <goal>display-plugin-updates</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.zenjava</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>${javafx-maven-plugin.version}</version>
+                <configuration>
+                    <verbose>false</verbose>
+                    <mainClass>${project.bundle.mainclass}</mainClass>
+                    <identifier>${jfxapp.name}</identifier>
+                    <skipJNLP>true</skipJNLP>
+                    <nativeReleaseVersion>${native-release-version}</nativeReleaseVersion>
+                    <bundleArguments>
+                        <systemwide>true</systemwide>
+                        <mac.CFBundleName>${jfxapp.name}</mac.CFBundleName>
+                        <mac.CFBundleIdentifier>${jfxapp.mac.bundleIdentifier}</mac.CFBundleIdentifier>
+                        <mac.dmg.simple>false</mac.dmg.simple>
+                        <mac.signing-key-developer-id-app>${jfxapp.mac.signing-key}</mac.signing-key-developer-id-app>
+                    </bundleArguments>
+                </configuration>
+                <executions>
+                    <execution>
+                        <!-- required before build-native -->
+                        <id>create-jfxjar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build-jar</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>create-native</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build-native</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

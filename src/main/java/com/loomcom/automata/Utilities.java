@@ -34,7 +34,9 @@ public class Utilities {
      * Center a window on screen.
      * 
      * @param w	The window to center.
+     * @deprecated This isn't necessary with JavaFX
      */
+    @Deprecated
     public static void centerWindow(Window w) {
 	Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 	
