@@ -9,7 +9,7 @@
 
     <groupId>com.loomcom</groupId>
     <artifactId>Automata</artifactId>
-    <version>1.2.5-SNAPSHOT</version>
+    <version>1.2.5</version>
     <description>Cellular automata explorer</description>
     <packaging>jar</packaging>
 
