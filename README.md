@@ -8,46 +8,25 @@ should therefore _not_ be looked at as an example of my most recent
 historical interest and pure vanity!
 
 These days, if you're interested in a much, much better Cellular
-Automata explorer, I would recommend Golly (http://golly.sourceforge.net/)
+Automata explorer, I would recommend [Golly](http://golly.sourceforge.net/) (http://golly.sourceforge.net/)
 
 Building Automata
 -----------------
 
-Automata uses the Ant Java build system. To build a JAR file, just type:
+Automata uses [Maven](https://maven.apache.org/) to build :
 
-    % ant
+    % mvn package
+    
 
-
-To build a full release, including a versioned ZIP file, type:
-
-    % ant release
 
 Building on OS X
 ----------------
 
-On OS X, this project uses the JarBundler ant task (another weekend
-project of mine) to create an executable Java bundle. Type:
-
-    % ant release-macosx
-
-
-Running Automata Explorer
--------------------------
-
-Automata requires the Java Runtime version 1.3 or later.
-
-To run by hand from the command line, just type
-
-UNIX or OS X:
-
-    % java -jar bin/automata.jar
-
-WINDOWS
-
-    > java -jar BIN\automata.jar
-
-
-Mac OS X releases will produce a double-clickable bundle, as well.
+On OS X, this project includes an ICNS resource and defines packaging
+variables so that the native bundler will generate a disk image installer.
+To make this work, you'll want to define the property `jfxapp.mac.signing-key`
+either in `pom.xml` or in your `settings.xml`. To get a signing key, you'll
+need to register an Apple ID as an [Apple developer](https://developer.apple.com).
 
 
 License
